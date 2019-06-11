@@ -1,0 +1,38 @@
+int maxPoints(vector<Point> &points) {
+        int size = points.size();
+        if(size<=2 )
+            return size;
+        int vp,cp,cmax,res=0;
+        
+        for(int i=0;i<size;i++)
+        {
+            vp=0;cp=0;cmax = 0;
+            map<double,int> grad;
+            for(int j=i+1;j<size;j++)
+            {
+                double x = points[i].x - points[j].x;
+                double y = points[i].y - points[j].y;
+                if(x==0 && y==0)  //重合点
+                    cp++;
+                else if(x==0)    //竖直方向
+                    vp++;
+                else               //斜率
+                {
+                    double k = y/x;
+                    if(grad.find(k)==grad.end())
+                        grad.insert(pair<double,int>(k,1));
+                    else
+                        grad[k]++;
+                }
+            }
+           map<double,int>::iterator it = grad.begin();
+            cmax = it->second;
+            while(it!=grad.end())
+            {
+                cmax = max(cmax,it->second);
+                it++;
+            }
+            res = max(max(cmax,vp)+cp+1,res);
+
+        }
+        return res;

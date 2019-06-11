@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+
+\title{拉格朗日对偶性}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+	\maketitle
+	拉格朗日对偶性通常解决约束最优化问题，通过解对偶问题来求出原始问题的解。
+	\section{原始问题}
+	设$f(x)，c_{i}(x),h_{j}(x)在R^{n}$上的连续可微函数，约束最优化问题为：
+	\begin{equation}
+	\mathop{min}_{x\varepsilon R^{n}}f\left ( x \right )
+	\end{equation}
+	\begin{equation}
+	s.t. \quad c_{i}(x)\leq 0, i =1,2,\ldots,k
+	\label{2}
+	\end{equation}
+	\begin{equation}
+	 \quad c_{j}\leq 0, j =1,2,\ldots,l
+	 \label{3}
+	\end{equation}
+	引入拉格朗日函数
+	\begin{equation}
+	L\left ( x,\alpha ,\beta  \right )=f\left ( x \right )+\sum_{i=1}^{k}\alpha _{i}c_{i}\left ( x \right )+\sum_{j=1}^{l}\beta _{i}h_{j}\left ( x \right )
+	\label{4}
+	\end{equation}
+	$\alpha_{i}\geq 0$考虑$x$的函数
+	\begin{equation}
+	\Theta _{P}(x)=\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}L\left ( x,\alpha ,\beta  \right )
+	\label{5}
+	\end{equation}
+	P表示原始问题。\\
+	假设给定某个$x$，如果$x$违反原始问题的约束条件，使$c_{i}(x)>0$或$h_{j}\neq 0$则：
+	\begin{equation}
+	\Theta _{P}(x)=\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}L\left ( x,\alpha ,\beta  \right )=+\infty 
+	\end{equation}
+	如果$x$满足约束条件公式\ref{2}和\ref{3}的话，由公式\ref{4}和\ref{5}可知：
+	\begin{align*}
+	\Theta _{P}\left ( x \right )=\begin{cases}
+	f(x) & \text{$x$满足原始问题约束}\\
+	+\infty & \text{其他}
+	\end{cases}
+	\end{align*}
+	所以考虑极小化问题
+	\begin{equation}
+	\mathop{min}_{x}\Theta _{P}\left ( x \right )=\mathop{min}_{x}\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}L\left ( x,\alpha ,\beta  \right )
+	\end{equation}
+	它与原始问题最优解等价，即它们有相同的解。定义原始问题的最优解为：
+	\begin{equation}
+	p^{\ast }=\mathop{min}_{x}\Theta _{P}\left ( x \right )
+	\end{equation}
+	\section{对偶问题}
+	广义拉格朗日函数的极大极小问题：
+	\begin{equation}
+	\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}\theta_{D}\left (  \alpha ,\beta \right )=\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}\mathop{min}_{x}L\left ( x,\alpha ,\beta  \right )
+	\end{equation}
+	将广义拉格朗日函数的极大极小问题表示为约束最优化问题：
+	\begin{equation}
+	\mathop{max}_{\alpha ,\beta }\theta_{D}\left (  \alpha ,\beta \right )=\mathop{max}_{\alpha ,\beta }\mathop{min}_{x}L\left ( x,\alpha ,\beta  \right )
+	\end{equation}
+	\begin{equation}
+	s.t. \quad \alpha _{i}\geq 0 , \quad i=1,2,\ldots,k
+	\end{equation}
+	定义对偶问题的最优解：
+	\begin{equation}
+	d^{*}=\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}\theta _{D}\left ( \alpha ,\beta  \right )
+	\end{equation}
+	\section{原始问题和对偶问题的关系}
+	\noindent 定理1：
+	\begin{equation}
+	d^{*}=\mathop{max}_{\alpha ,\beta }\mathop{min}_{x}L\left ( x,\alpha ,\beta  \right )\leq =\mathop{min}_{x}\mathop{max}_{\alpha ,\beta ;\alpha _{i}\geq 0}L\left ( x,\alpha ,\beta  \right )=p^{*}
+	\end{equation}
+	定理2：假设$f(x)$函数和$c_{i}(x)$是凸函数，$h_{j}(x)$是放射函数，并且假设不等式约束$c_{j}(x)$是严格可行的，则存在$x^{*},\alpha ^{*},\beta ^{*}$,使得$x^{*}$是原始问题的解，$\alpha ^{*},\beta ^{*}$释对偶问题的解，并且：
+	\begin{equation}
+	p^{*}=d^{*}=L\left \{ x^{*},\alpha ^{*},\beta ^{*} \right \}
+	\end{equation}
+	定理3：定理2的充分必要条件为KKT条件：
+	\begin{equation}
+	\bigtriangledown _{x}L\left ( x^{*},\alpha ^{*},\beta ^{*} \right )=0
+	\end{equation}
+	\begin{equation}
+	\alpha _{i}^{*}c_{i}\left ( x^{*} \right )=0,\quad i=1,2,...,k
+	\end{equation}
+	\begin{equation}
+	c_{j}\left ( x^{*} \right )\leq 0 ，\quad i=1,2,...,k
+	\end{equation}
+	\begin{equation}
+	\alpha _{i}^{*}\geq 0, \quad i=1,2,\ldots,k
+	\end{equation}
+	\begin{equation}
+	h_{j}\left ( x^{*} \right )=0 \quad j=1,2,\ldots,l
+	\end{equation}
+\end{document}

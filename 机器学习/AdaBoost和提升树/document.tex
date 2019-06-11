@@ -1,0 +1,52 @@
+\documentclass{report}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+
+\title{提升方法}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+	\maketitle
+	\section{AdaBoost算法}
+	对提升方法而言，有两个问题需要回答：(1):在每一轮中如何改变训练数据的权值或概率分布;(2):如何将弱分类器组合成强分类器。
+	AdaBoost针对第一个问题：提高被前一轮弱分类器错误分类样本的权值，降低被正确分类样本的权值;针对第二个问题：加大分类误差率小的弱分类器的权值，减小分类误差率大的弱分类器的权值。
+	
+	\begin{algorithm}[h]
+		\caption{AdaBoost}
+		\LinesNumbered
+		\KwIn{训练数据集T，弱分类算法}
+		\KwOut{最终分类器}
+		
+		初始化训练数据的权值分布$D_{1}=\left ( w_{11},\ldots,w_{1i},\ldots,w_{1N} \right ),w_{1i}=\frac{1}{N},i=1,2,\ldots,N$
+		
+		对$m=1,2,\ldots,M$：
+		(1):对具有权值分布的$D_{m}$的训练数据集学习，得到基本分类器$G_{m}(x)$。(2):计算基本分类器在训练数据集的分类误差率$e_{m}=\sum_{i=1}^{N}w_{mi}I\left ( G_{m}\left ( x_{i} \right ) \neq y_{i} \right )$;(3):计算$G_{m}(x)$的系数$\alpha _{m}=\frac{1}{2}\log \frac{1-e_{m}}{e_{m}}$;这里的对数是自然对数。
+		(4):更新训练数据集的权值分布$$D_{m+1} = (w_{m+1,1},\ldots,w_{m+1,i},\ldots,w_{m+1,N})$$ $$w_{m+1,i}=\frac{w_{mi}}{Z_{m}}exp\left ( -\alpha _{m}y_{i}G_{m}\left ( x_{i} \right ) \right ),i=1,2,\ldots,N$$  $$Z_{m}=\sum_{i=1}^{N}w_{mi}exp\left ( -\alpha _{m}y_{i}G_{m}\left ( x_{i} \right ) \right )$$
+		
+		构建基本分类器的线性组合$$f\left ( x \right )=\sum_{i=1}^{M}\alpha _{m}G_{m}\left ( x \right )$$
+		
+		得到最终分类器：
+		$$G\left ( x \right )=sign\left ( \sum_{m=1}^{M}\alpha _{m}G_{m}\left ( x \right ) \right )$$
+	\end{algorithm}
+
+	\section{提升树}
+	对于二分类问题，提升树只需要将AdaBoost算法的基本分类器限制为二类分类树即可。对于回归提升树：
+	\begin{algorithm}[h]
+		\caption{回归问题的提升树算法}
+		\LinesNumbered
+		\KwIn{训练数据集}
+		\KwOut{提升树$f_{M}(x)$}
+		初始化$f_{0}(x)$
+		对$m=1,2,\ldots,M$
+		计算残差$$r_{mi}=y_{i}-f_{m-1}(x_{i})，i=1,2,\ldots,N$$
+		
+		拟合残差$r_{mi}$学习一个回归树，得到$T\left ( x;\Theta _{m} \right )$
+		
+		更新$$f_{m}\left ( x \right )=f_{m-1}\left ( x \right )+T\left ( x;\Theta _{m} \right )$$
+		
+		得到回归问题提升树
+		$$f_{M}=\sum_{m=1}^{M}T\left ( x;\Theta _{m} \right )$$
+	\end{algorithm}
+\end{document}

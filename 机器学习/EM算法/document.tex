@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+
+\title{EM算法}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+	\maketitle
+	\textbf{EM算法是含有因变量的概率模型参数的极大似然估计方法，每代迭代由两步组成：E步，求期望；M步,求极大。本文只讲述EM算法和在高斯函数上的应用,算法的推导和收敛性证明请查阅相关资料。}
+	\section{EM算法}
+	一般用$Y$表示观测随机变量的数据，$Z$表示隐随机变量的数据，$Y$和$Z$连在一起成为完全数据，感测数据$Y$又称为不完全数据。假设给定观测数据$Y$,其概率分布式$P(Y|\theta )$,其$\theta $是需要估计的模型参数，那不完全数据$Y$的似然函数$P(Y|\theta )$.对数似然函数$L\left ( \theta  \right )=\log P\left ( Y|\theta  \right )$.假设$Y$和$Z$的联合概率分布为$P\left ( Y,Z|\theta  \right )$，那么完全数据的对数似然函数是$\log P\left ( Y,Z|\theta  \right )$。
+	
+	\begin{algorithm}[h]
+		\caption{EM算法}
+		\LinesNumbered
+		\KwIn{观测变量数据Y，隐变量数据Z，联合分布$P(Y,Z|\theta )$,条件分布$P\left ( Z|Y,\theta  \right )$}
+		\KwOut{模型参数$\theta $}
+		
+		选择参数的初值$\theta ^{0}$,开始迭代。
+		
+		E步：记$\theta ^{i}$为第$i$次迭代参数$\theta $的估计值，在第$i+1$次迭代的E步，计算$$Q\left ( \theta ，\theta ^{i} \right )=\sum _{Z}\log P\left ( Y,Z|\theta  \right )P\left ( Z|Y,\theta ^{i} \right )$$ 
+		$P(Z|Y,\theta ^{i})$是在给定观测数据Y和当前的参数估计$\theta ^{i}$下隐变量数据Z的条件概率分布。
+		
+		M步:求使$Q\left ( \theta ,\theta ^{i} \right )=\arg \mathop{max }_{\theta }Q\left ( \theta ,\theta ^{i} \right )$
+		
+		重复第二步和第三步，直到收敛。
+	\end{algorithm}
+
+	\section{EM算法在高斯混合模型学习中的应用}
+	\noindent 高斯混合模型指具有以下形式的概率分布模型：
+	$$P\left ( y|\theta  \right )=\sum_{k=1}^{K}\alpha _{k}\phi \left ( y|\theta _{k} \right )$$
+	其中，$\alpha _{k}$是系数，$\alpha _{k}\geq 0$,$\sum_{k=1}^{K}\alpha _{k}=1$;$\phi \left ( \theta |\theta _{k} \right )$是高斯分布密度，$\theta _{k}=\left ( \mu _{k} ,\sigma _{k} ^{2}\right )$
+	$$\phi \left ( y|\theta _{k} \right )=\frac{1}{\sqrt{2pi}\sigma _{k}}exp\left ( -\frac{(y-\mu _{k})^{2}}{2\sigma _{k}^{2}} \right )$$
+	
+	观测数据$y_{j},j=1,2,\ldots,N$产生过程为：首先依概率$\alpha _{k}$选择第k个高斯分布模型$\phi \left ( y|\theta _{k} \right )$；然后依第K个分模型的概率分布$\phi \left ( y|\theta _{k} \right )$生成观测数据$y_{j}$。
+	
+	\begin{align*}
+	\gamma _{jk}=\begin{cases}
+	1 , & \text{第j个观测数据来自第K个分模型} \\
+	0 ，& \text{否则}
+	\end{cases}
+	\gamma _{jk}是0-1随机观测数据。
+	\end{align*}
+	完全数据的似然函数为
+	\begin{align*}
+	P{y,\gamma |\theta } &= \prod_{k=1}^{K}\prod_{j=1}^{N}\left [ \alpha _{k}\phi \left ( y_{j}|\theta _{k} \right ) \right ]^{\gamma _{jk}} \\
+	&= \prod_{k=1}^{K}\alpha _{k}^{n_{k}}\prod_{j=1}^{N}\left [ \phi \left ( y_{j}|\theta _{k} \right ) \right ]^{\gamma _{jk}}\\
+	&=   \prod_{k=1}^{K}\alpha _{k}^{n_{k}}\prod_{j=1}^{N}\left [ \phi \left ( y|\theta _{k} \right )=\frac{1}{\sqrt{2pi}\sigma _{k}}exp\left ( -\frac{(y-\mu _{k})^{2}}{2\sigma _{k}^{2}} \right )]^{\gamma _{jk}}\right ]^{\gamma _{jk}}
+	\end{align*}
+	其中$n_{k}=\sum_{j=1}^{N}\gamma _{jk},\sum_{k=1}^{K}n_{k}=N$。
+	完全数据的对数似然函数为
+	\begin{equation*}
+	\log P\left ( y,\gamma|\theta   \right )=\sum_{k=1}^{K}\left \{ n_{k}\log \alpha _{k}+\sum_{j=1}^{N}\gamma _{jk}\left [ \log \left ( \frac{1}{\sqrt{2pi}} \right )-\log \sigma _{k}-\frac{1}{2\sigma _{k}^{2}}\left ( y_{j}-\mu _{k} \right )^{2} \right ] \right \}
+	\end{equation*}
+	确定Q函数：
+	\begin{align*}
+	P\left ( \gamma _{jk}|y,\theta  \right ) &= 	P\left ( \gamma _{jk}=1|y,\theta  \right )  \\
+	&= \frac{P\left ( \gamma _{jk}=1，y_{j}|\theta  \right )}{\sum_{k=1}^{K}P\left ( \gamma _{jk}=1，y_{j}|\theta  \right )}\\
+	&= \frac{\alpha _{k}\phi \left ( y_{j}|\theta _{k} \right )}{\sum_{k=1}^{K}\alpha _{k}\phi \left ( y_{j}|\theta _{k} \right )} 
+	\end{align*}
+	Q函数为：$$Q\left ( \theta ,\theta ^{i} \right )=\sum _{Z}\log P\left (  y,\gamma|\theta  \right )P\left ( \gamma _{jk}|y,\theta \right )$$
+	求函数$Q\left ( \theta ,\theta ^{i} \right )$对$\theta$的极大值，分别对$\mu _{k}$,$\sigma _{k}^{2}$求偏导并令其为0即可得到解；在$\sum_{k=1}^{K}\alpha _{k}=1$条件下求偏导并令其为0得到其解。
+	$$\mu _{k}=\frac{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}y_{j}}{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )y_{jk}}$$
+	$$\sigma ^{2}_{k}=\frac{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}\left ( y_{j}-\mu _{k} \right )^{2}}{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}}$$
+	$$\alpha_{k}=\frac{\sum_{j=1}^{N}P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}}{N}$$
+	
+	\begin{algorithm}[h]
+		\caption{高斯混合模型参数估计的EM算法}
+		\LinesNumbered
+		\KwIn{观测数据，高斯混合模型}
+		\KwOut{高斯混合模型参数}
+		取参数的初始值开始迭代
+		
+		E步:计算分模型k对观测数据$y_{j}$响应度 $$\frac{\alpha _{k}\phi \left ( y_{j}|\theta _{k} \right )}{\sum_{k=1}^{K}\alpha _{k}\phi \left ( y_{j}|\theta _{k} \right )} $$
+		
+		M步：$$\mu _{k}=\frac{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}y_{j}}{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )y_{jk}}$$
+		$$\sigma ^{2}_{k}=\frac{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}\left ( y_{j}-\mu _{k} \right )^{2}}{\sum_{j=1}^{N}	P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}}$$
+		$$\alpha_{k}=\frac{\sum_{j=1}^{N}P\left ( \gamma _{jk}|y,\theta  \right )\gamma _{jk}}{N}$$
+		
+		重复2和3步，直至收敛。
+	\end{algorithm}
+	
+	
+	
+\end{document}

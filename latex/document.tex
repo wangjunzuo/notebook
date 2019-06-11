@@ -1,0 +1,169 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{biblatex}
+\addbibresource{refer.bib}
+\title{{论文格式}\\
+	{\large ---以中文论文为例}}
+\author{W.J.Z}
+\date{}
+\begin{document}
+	
+\maketitle
+\begin{abstract}
+	本文总结论文写作中了textstudio软件中文设置、论文结构、插图、表格、公式和其他一些设置，文章以后查阅之用，因作者水平有限，如有不足之处请多多指教，后续将继续完善内容。
+\end{abstract}
+%\textbf{摘要：}
+
+\section{中文设置}
+	\begin{enumerate}[步骤1:]
+		\item Options(选项) 
+		\item 软件右下角选为 UTF-8
+		\item $\backslash$usepackage\{ctex\}
+	\end{enumerate}
+
+\section{论文结构}
+	\begin{enumerate}[结构1：]
+		\item 	一级标题：$\backslash$section\{一级标题题目\}
+		\item   二级标题：$\backslash$subsection\{二级标题题目\}
+		\item  三级标题：$\backslash$subsubsection\{三级标题题目\}
+	\end{enumerate}
+
+\section{插图}
+	图片和表格一般都设置为浮动体,而图片一般都为几排几列格式,下面演示这种方法设置：
+	\begin{enumerate}[步骤1：]
+		\item $\backslash$usepackage\{graphicx\}\\
+				 $\backslash$usepackage\{subfigure\}\\
+				  $\backslash$graphicspath\{\{图片所在的路径\}\}
+		\item 使用minipage命令显示所想要的格式\\
+				$\backslash$begin\{figure\}[htbp] \% h:here t:top b:bottom p:page  \\
+			    $\backslash$centering \%居中显示 \\
+			    $\backslash$begin\{minipage\}[b]\{0.24$\backslash$textwidth\} \%该小页面占文本宽度的\%24 \\   
+			    $\backslash$includegraphics[width=$\backslash$textwidth][a]  \%加载图片名为a的图片 \\
+			    $\backslash$caption *\{图片1\} \% 对分吐取标题不进行标号 \\
+			    $\backslash$end\{minipage\}  \\
+			    \ldots \\
+			    $\backslash$caption *\{图片\} \% 对整块图取标题进行标号 \\
+			   $\backslash$label\{d\}  \%方便引用 \\
+			   $\backslash$\{figure\}
+	\end{enumerate}
+	使用eps文件格式
+	\begin{lstlisting}
+	\usepackage{epstopdf}
+	\end{lstlisting}
+\section{表格}
+   \begin{enumerate}[步骤1：]
+	\item	$\backslash$begin\{table\}  \\
+			$\backslash$centering \\
+			$\backslash$caption\{表格\}  \% 对表格取标题 \\
+			$\backslash$label\{t\}   \%设置引用名称 \\
+			$\backslash$begin\{tabular\}\{|c c |\}  \% c:居中 |:画竖线 \\
+			$\backslash$hline \%画横线 \\
+			姓名 \& 年龄  \% 数据以\&进行分割 \\
+			\ldots   \\
+			$\backslash$end\{tabular\} \\
+			$\backslash$end\{table\}
+	\end{enumerate}
+	caption位于表格左上方
+	\begin{lstlisting}
+	\captionsetup[table]{
+	labelsep=newline,%换行
+	singlelinecheck=false,%居左
+	}
+	\end{lstlisting}
+\section{公式}
+
+	\begin{enumerate}[格式1：]
+		\item 	$\backslash$begin\{equation\}	\%单行对齐 自动编号 \\
+				\ldots  \\
+				$\backslash$end\{equation\}
+				
+		\item $\backslash$begin\{align*\}  \\
+		   \&  \quad \%以\&后面的符号为对齐标准  \\
+		$\backslash$end\{align*\}
+		
+	\end{enumerate}
+ 条件函数：
+	\begin{lstlisting}
+	\begin{equation}
+	D(x)=\begin{cases}
+	1， & \text{}\\
+	0, &  \text{}
+	\end{cases}
+	\end{equation}
+	\end{lstlisting}
+\section{代码}
+	\begin{enumerate}
+	\item	$\backslash$usepackage\{listing\} \\
+		   $\backslash$lstset\{language=python,tabsize=4\}  \%指定编程语言\\
+		   	$\backslash$begin\{lstlisting\}\\
+		   		$\backslash$end\{lstlisting\}
+	\end{enumerate}
+\section{算法}
+\begin{lstlisting}
+	\usepackage[repeat]{algorithm2e}
+	\begin{algorithm}[H]
+	\caption{}  %算法名字
+	\LinesNumbered  %显示行号
+	\Kwln{}  %输入参数
+	\Kwout{} %输出
+	\repeat{}{}
+	\For{}{}
+	\end{algorithm}
+\end{lstlisting}
+\section{改变某行颜色}
+\begin{lstlisting}
+	\usepackage{color}   %加载支持包
+	{\color{red}{文本}}
+\end{lstlisting}
+\section{论文引用}
+\begin{lstlisting}
+#修改配置
+option->configure texstudio->build->bibligraphy tool->Biber
+#加载支持包
+\usepackage{biblatex}
+#创建*.bib文件 在百度学术复制bib格式引用
+\addbibresource{ref.bib}
+#进行引用
+\cite{}
+#显示引用
+\printbiblography
+\end{lstlisting}
+\section{转置}
+
+\begin{lstlisting}
+	\usepackage{rotating} \begin{sidewaystable}
+	\centering
+	\end{sidewaystable}
+\end{lstlisting}
+\subsection{标题}
+\begin{lstlisting}
+	\usepackage[labelsep=space]{caption}
+	\captionsetup[table]{
+	labelsep=newline,%换行
+	singlelinecheck=false,%居左
+	}
+\end{lstlisting}
+\section{其他}
+	\begin{enumerate}[引用：]
+		\item $\backslash$ref\{引用名字\}
+	\end{enumerate}
+	\begin{lstlisting}
+	\noindent  取消改行缩进
+	\mathop(min)_{i,j} 下标
+	指定纸张
+	\usepackage[a4paper, left = 2cm, right = 2cm]{geometry} 
+	添加页眉
+	\usepackage{fancyhdr}
+	\pagestyle{fancy}
+	\lhead{}
+	\chead{}
+	% bfseries
+	\chead{\bfseries W.J.Z copyright reserved}
+	
+	#字母上方
+	\hat{}
+	\end{lstlisting}
+\end{document}

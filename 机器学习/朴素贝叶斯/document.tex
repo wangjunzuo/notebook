@@ -1,0 +1,71 @@
+\documentclass{report}
+\usepackage{ctex}
+\usepackage{amsmath}
+\title{朴素贝叶斯}
+\author{W.J.Z}
+\date{}
+\begin{document}
+	\maketitle
+	\textbf{摘要：}朴素贝叶斯法是基于贝叶斯原理和特征条件独立假设的分类方法。对于给定的输出集，首先基于特征条件独立假设学习输入/输出之间的联合概率分布，然后基于此模型，利用贝叶斯定理求出后验概率最大的输出。
+	\section{朴素贝叶斯原理}
+	朴素贝叶斯法采用期望风险最小化(误分类的样本尽可能少)，选择0-1损失函数：
+	\begin{equation}
+	L(Y,f(X))=\begin{cases}
+	1 , & Y \neq f(X)\\
+	0 , & Y = f(X)
+	\end{cases}
+	\label{1}
+	\end{equation}
+	期望风险函数为：
+	\begin{equation}
+	E\left [ L(Y,f(X) \right ]
+	\label{01}
+	\end{equation}
+	注意公式\ref{01}是针对的联合分布，而我们需要的是条件期望，根据0-1分布期望公式，可得条件期望公式为：
+	\begin{equation}
+	\sum_{i=1}^{n}\left ( L\left ( c_{i},f\left ( X \right ) \right )P\left ( c_{i}|X  \right ) \right )
+	\label{com}
+	\end{equation}
+	$c_{i} \epsilon Y$ 我们要使期望风险最小化，也就是使公式\ref{com}最小化，将公式\ref{1}带入公式\ref{com}得：
+	\begin{align*}
+	f\left ( x \right ) &= 	 \arg min\sum_{i=1}^{n}\left ( L\left ( c_{i},f\left ( X \right ) \right )P\left ( c_{i}|X=x  \right ) \right )\\
+	&= \arg min\sum_{i=1}^{n}\left ( 1 \times P\left ( y\neq c_{i}| X = x \right ) + 0 \times P\left ( y= c_{i}|X=x \right )\right )	\\
+	&= \arg min\sum_{i=1}^{n}\left (P\left ( y\neq c_{i}| X = x \right ) \right )\\
+	&= \arg min\left ( 1-\left ( P\left ( y= c_{i}| X = x \right ) \right )\right )\\
+	&= \arg max P\left ( y= c_{i}| X = x \right ) 
+	\end{align*}
+	后验概率最大化准则：
+	\begin{equation}
+	f\left ( x \right )= \arg \mathop{sum}\limits_{c_{i}} \left ( P\left (Y= c_{i}| X = x \right ) \right )
+	\end{equation}
+	\section{朴素贝叶斯公式}
+	朴素贝叶斯进行了条件独立性假设，条件独立性假设为:
+	\begin{align}
+	P\left (X=x| Y=c_{k}\right ) &= P\left ( x_{1},x_{2},\ldots,x_{n}|Y=c_{k} \right )\\
+	&= \coprod_{i=1}^{n}P\left (x_{i} |Y=c_{k}\right )
+	\label{3}
+	\end{align}
+	后验概率公式：
+	\begin{equation}
+	P\left ( Y=c_{i}|X=x \right )=\frac{P\left ( X=x|Y=c_{i}\right )P\left ( Y=c_{i} \right ) }{\sum_{i}P\left ( X=x|Y=c_{i}\right )P\left ( Y=c_{i} \right ) }
+	\label{4}
+	\end{equation}
+	将公式\ref{3}带入公式\ref{4}得：
+	\begin{equation}
+	P\left ( Y=c_{k}|X=x \right )=\frac{P\left ( Y=c_{k}\right ) \prod_{i}P\left ( x_{i}|Y=c_{k} \right )}{\sum P\left ( Y=c_{k}\right )\prod_{i}P\left ( x_{i}|Y=c_{k} \right ) }
+	\end{equation}
+	由于分母对于任何$c_{k}$都是一样的，综上可得朴素贝叶斯分类器可表示为：
+	\begin{equation}
+	y=\arg \mathop{max}_{c_{k}}P\left ( Y=c_{k}\right ) \prod_{i}P\left ( x_{i}|Y=c_{k} \right )
+	\end{equation}
+	\section{极大似估计}
+	先验概率$P(Y=c_{k})$的极大似然估计为：
+	\begin{equation}
+	P\left ( Y=c_{k} \right )=\frac{\sum_{i=1}^{N}I\left ( y_{i}=c_{k} \right )}{N}
+	\end{equation}
+	条件概率的极大似然估计：
+	\begin{equation}
+	P\left ( x_{i}|Y \right ) =\frac{\sum_{i=1}^{N}I\left ( x_{i},y_{i} = x_{k}\right )}{\sum_{i=1}^{N}I\left ( y_{i}=c_{k} \right )}
+	\end{equation}
+	\textbf{参考：}统计学习方法
+\end{document}

@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage[top=0.7cm]{geometry}
+\usepackage{enumerate}
+
+\title{C++容器接口汇总}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+%	\maketitle
+	\section{内置容器}
+	\subsection{vector \#include <vector>}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+			接口 & 示例 \\
+			\hline
+			begin() & vector<int>::iterator it = myvector.begin(); \\
+			\hline
+			end() &  vector<int>::iterator it = myvector.end(); \\
+			\hline
+			size() & myvector.size();  \\
+			\hline
+			empty() & myvector.empty(); \\
+			\hline
+			at(i) & myvector.at(i); \\
+			\hline
+			front() & myvector.front(); \\
+			\hline
+			back() & myvector.back(); \\
+			\hline
+			push\_back() & myvector.push\_back(num); \\
+			\hline
+			pop\_back() & myvector.pop\_back();\\
+			\hline
+			insert() & myvector.insert(myvector.begin(),value);\\
+			\hline 
+			erase() & myvector.erase(myvector.begin()+3);\\
+			\hline
+			clear() & myvector.clear();\\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\subsection{list}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+			begin() & list<int>::iterator it = mylist.begin();\\
+			\hline
+			end() &  list<int>::iterator it = mylist.end(); \\
+			\hline
+			empty() & mylist.emprty(); \\
+			\hline
+			size() & mylist.size(); \\
+			\hline
+			front() & mylist.front();\\
+			\hline
+			back() & mylist.back();\\
+			\hline
+			push\_front() & mylist.push\_front();\\
+			\hline
+			pop\_front() & mylist.pop\_front();\\
+			\hline
+			push\_back() & mylist.push\_back();\\
+			\hline
+			pop\_back() & mylist.pop\_back();\\
+			\hline
+			insert() & mylist.insert(mylist.begin()+3,value);\\
+			\hline
+			erase() & mylist.erase(mylist.begin()+2);\\
+			\hline
+			clear() & mylist.clear();\\
+			\hline
+			remove() & mylist.remove(value);\\
+			\hline
+			sort() & mylist.sort();\\
+			\hline
+			unique() & mylist.unique();\\
+			\hline
+			merge() & mylist1.merge(mylist2);\\
+			\hline
+		\end{tabular}
+	\end{table}
+\newpage
+	\subsection{stack}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+			empty() & mystack.empty();\\
+			\hline
+			size() & mystack().size();\\
+			\hline
+			top() & mystack.top();\\
+			\hline
+			push() & mystack.push(value);\\
+			\hline	
+			pop() & mystack.pop();\\
+			\hline
+		\end{tabular}
+	\end{table}
+	\subsection{queue}
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+			empty() & myqueue.empty();\\
+			\hline
+			size() & myqueue.size();\\
+			\hline
+			front() & myqueue.front();\\
+			\hline
+			back() & myqueue.back();\\
+			\hline
+			push() & myqueue.push();\\
+			\hline
+			pop() & myqueue.pop();\\
+			\hline
+		\end{tabular}
+	\end{table}
+	\subsection{set}
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+			begin() & myset.begin();\\
+			\hline
+			end()& myset.end();\\
+			\hline
+			empty() & myset.empty();\\
+			\hline
+			size() & myset.size();\\
+			\hline
+			insert() & myset.insert(value);\\
+			\hline
+			erase() & myset.erase(value);\\
+			\hline
+			clear() & myset.clear();\\
+			\hline
+			find() & set<int>::iterator it = myset.find(value);\\
+			\hline
+		\end{tabular}
+	\end{table}
+\newpage
+	\subsection{map}
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{|p{3cm}|p{10cm}|}
+			\hline
+		construct & map<char,int> mymap;mymap['a']=1;\\
+		\hline
+		begin() & mymap.begin();\\
+		\hline
+		end() & mymap.end();\\
+		\hline
+		empty()& mymap.empty();\\
+		\hline
+		size()& mymap.size();\\
+		\hline
+		at() & mymap.at('a');\\
+		\hline
+		insert() & mymap.insert(std::pair<char,int>('a',3));\\
+		\hline
+		erase()& mymap.erase(key);\\
+		\hline
+		clear() & mymap.clear();\\
+		\hline
+		find() & mymap.find(key);\\
+		\hline
+		\end{tabular}
+	\end{table}
+\end{document}

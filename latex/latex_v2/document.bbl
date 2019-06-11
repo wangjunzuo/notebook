@@ -1,0 +1,60 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{Pourghasemi2012Application}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,uniquepart=base,hash=ea14fe8836dfe117739217d4e7aac6b4}{%
+           family={Pourghasemi},
+           familyi={P\bibinitperiod},
+           given={Hamid\bibnamedelima Reza},
+           giveni={H\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=70c9c55c1cc5f1a8d025d54172241b84}{%
+           family={Pradhan},
+           familyi={P\bibinitperiod},
+           given={Biswajeet},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{8881b9f59fa1fa3219593b3692630837}
+      \strng{fullhash}{8881b9f59fa1fa3219593b3692630837}
+      \strng{bibnamehash}{8881b9f59fa1fa3219593b3692630837}
+      \strng{authorbibnamehash}{8881b9f59fa1fa3219593b3692630837}
+      \strng{authornamehash}{8881b9f59fa1fa3219593b3692630837}
+      \strng{authorfullhash}{8881b9f59fa1fa3219593b3692630837}
+      \field{sortinit}{P}
+      \field{sortinithash}{8d51b3d5b78d75b54308d706b9bbe285}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Natural Hazards}
+      \field{number}{2}
+      \field{title}{Application of fuzzy logic and analytical hierarchy process (AHP) to landslide susceptibility mapping at Haraz watershed, Iran}
+      \field{volume}{63}
+      \field{year}{2012}
+      \field{pages}{965\bibrangedash 996}
+      \range{pages}{32}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

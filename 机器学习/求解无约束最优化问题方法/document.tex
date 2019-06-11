@@ -1,0 +1,88 @@
+\documentclass{report}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+\title{无约束最优化问题求解方法}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+	\maketitle
+	\section{梯度下降法}
+	假设$f(x)$有一阶偏导数，若第K次迭代值为$x^{k}$，则可将$f(x)$在$x^{k}$附近展开一阶泰勒展开式。
+	$$f\left ( x \right )=f\left ( x^{k} \right )+\bigtriangledown f\left ( x^{k} \right )$$
+	$\bigtriangledown f\left ( x^{k} \right )$为$f(x)$在$x^{k}$的梯度。
+	
+	第$k+1$逸代值为：$$x^{k+1}\leftarrow x^{k}+\lambda _{k}p_{k}$$
+	$p_{k}$为搜索方向，$p_{k}=-\bigtriangledown f\left ( x^{k} \right )$,$\lambda _{k}$为搜索步长，使得：
+	$$f\left ( x^{k}+\lambda _{k}p_{k} \right )=\mathop{min}_{\lambda \geq 0}f\left ( x^{k}+\lambda p_{k} \right )$$
+	\begin{algorithm}[h]
+		\caption{梯度下降法}
+		\LinesNumbered
+		\KwIn{目标函数$f(x)$,梯度函数$\bigtriangledown f\left ( x^{k} \right )$，计算精度$\varepsilon $}
+		\KwOut{$f(x)$的极小值点}
+		取初始值$x^{0}$,置$k=0$
+		
+		计算$f(x^{k})$
+		
+		计算梯度$\bigtriangledown f\left ( x^{k} \right )$,当$\left \| \bigtriangledown f\left ( x^{k} \right ) \right \|< \varepsilon $停止迭代，令极小点为$x^{k}$；否则令$p_{k}=-\bigtriangledown f\left ( x^{k} \right )$,求$\lambda _{k}$,使$$f\left ( x^{k}+\lambda _{k}p_{k} \right )=\mathop{min}_{\lambda \geq 0}f\left ( x^{k}+\lambda p_{k} \right )$$
+		
+		$x^{k+1}= x^{k}+\lambda _{k}p_{k}$计算$f(x^{k+1})$,当$\left \| f\left ( x^{k+1} \right ) -f\left ( x^{k} \right )\right \|< \varepsilon $或$\left \| x^{k+1}-x^{k} \right \|< \varepsilon $时，停止迭代令极小值点为$x^{k+1}$
+		
+		否则，$k=k+1$,转到步骤3
+	\end{algorithm}
+	\section{牛顿法和BFGS}
+	牛顿法时迭代算法，每一步需要求解目标函数的海塞矩阵的逆矩阵，计算比较复杂。拟牛顿法通过正定矩阵近似海塞矩阵，简化这一计算过程.
+	\subsection{牛顿法}
+	假设$f(x)$有二阶连续偏导数，如第k次迭代值为$x^{k}$，则可在$f(x)$在$x^{k}$附近展开二阶泰勒公式：
+	$$f\left ( x \right )=f\left ( x^{k} \right )+\bigtriangledown \left ( x-x^{k} \right )+\frac{1}{2}\left ( x-x^{k} \right )^{T}H\left ( x^{k} \right )\left ( x-x^{k} \right )$$
+	
+	$\bigtriangledown f\left ( x^{k} \right )$为$f(x)$在$x^{k}$的梯度,$H(x^{k})$是$f(x)$的海塞矩阵：
+	$$H\left ( x \right )=\left [ \frac{\partial  ^{2}f}{\partial x_{i}\partial x_{j}} \right ]$$
+	函数$f(x)$有极值的必要条件是在极值点处一阶导数为0，即梯度向量为0，当海塞矩阵是正定矩阵时$(X^{-1}H\left ( x \right )X)>0$,函数的极值为极小值。\\
+	
+	假设$x^{k+1}$满足$\bigtriangledown f\left ( x^{k+1} \right )=0$,泰勒公式求导并将$x^{k+1}$代入得：
+	$$\bigtriangledown f\left ( x^{k} \right ) + H_{k}\left ( x^{\left ( k+1 \right )-}x^{\left ( k \right )} \right )=0$$
+	因此$$x^{\left ( k+1 \right )}=x^{\left ( k \right )}-H_{k}^{-1}\bigtriangledown f\left ( x^{k} \right )$$
+	令$P_{k}=-H_{k}^{-1}\bigtriangledown f\left ( x^{k} \right )$.
+	\begin{algorithm}
+		\caption{牛顿法}
+		\LinesNumbered
+		\KwIn{目标函数$f(x)$，梯度函数$ \bigtriangledown f(x)$,海塞矩阵$H(x)$和精度$\varepsilon $}
+		\KwOut{函数极小值点}
+		取初始值$x^{0}$,置$k=0$
+		
+		计算$ \bigtriangledown f\left ( x^{k} \right ) $
+		
+		若$\left \| \bigtriangledown f\left ( x^{k} \right ) \right \|< \varepsilon $，则停止计算，得到近似解$x^{k}$.
+		
+		计算$H(x^{k})$，求$$P_{k}=-H_{k}^{-1}\bigtriangledown f\left ( x^{k} \right )$$
+		
+		置$x^{(k+1)}=x^{k}+p_{k}$
+		
+		置$k=k+1$,转到步骤2
+	\end{algorithm}
+	\newpage
+	拟牛顿算法使用一个n阶矩阵来代替海塞矩阵，来降低因海塞矩阵导致计算度复杂的问题。
+	
+	\begin{algorithm}[h]
+		\caption{BFGS算法}
+		\LinesNumbered
+		\KwIn{目标函数$f(x)$，梯度函数$ \bigtriangledown f(x)$,精度$\varepsilon $}
+		\KwOut{函数极小值点}
+		初始点$x^{(0)}$，取$B_{0}$为正定对称矩阵，置K=0.
+		
+		计算$\left \| \bigtriangledown f\left ( x^{k} \right ) \right \|< \varepsilon $，则停止计算，得到近似解$x^{k}$.
+		
+		否则计算$H(x^{k})$，求$$P_{k}=-H_{k}^{-1}\bigtriangledown f\left ( x^{k} \right )$$
+		
+		求$\lambda _{k}$,使$$f\left ( x^{k}+\lambda _{k}p_{k} \right )=\mathop{min}_{\lambda \geq 0}f\left ( x^{k}+\lambda p_{k} \right )$$
+		
+		置$x^{k+1}= x^{k}+\lambda _{k}p_{k}$
+		
+		计算$\bigtriangledown f\left ( x^{k+1} \right )$，若$\left \| \bigtriangledown f\left ( x^{k+1} \right ) \right \|< \varepsilon $则停止计算得近似解，否则$$B_{k+1}=B_{k}+\frac{y_{k}y_{k}^{T}}{y_{k}^{T}\partial_{k}}-\frac{B_{k}\partial _{k}\partial_{k}^{T}B_{k}}{\partial _{k}^{T}B_{k}\partial _{k}}$$
+		$y_{k}=\bigtriangledown f\left ( x^{k+1} \right )-\bigtriangledown f\left ( x^{k} \right )$,$\partial _{k}=x^{k+1}-x^{k}$
+		
+		置k=k+1,转到步骤2
+	\end{algorithm}
+\end{document}

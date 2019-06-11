@@ -1,0 +1,167 @@
+\documentclass[a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[margin=1in,top=1cm]{geometry}
+\usepackage[ruled]{algorithm2e}
+\usepackage{listings}
+\lstset{language=python,tabsize=3}
+\title{降维}
+\author{W.J.Z}
+\date{2019.4.17}
+
+\begin{document}
+	\maketitle
+	\section{MDS}
+	MDS(多维缩放)是一种经典的线性降维。假设m个样本在原始空间的距离矩阵为$D\epsilon R^{m\times m}$,其第i行第j列的元素$dist_{ij}$为样本$x_{i}$到$x_{j}$的距离。$Z\epsilon R^{d^{'}\times m},d^{'}<d$为降维到$d^{'}$空间的坐标，令$B=Z^{T}Z$,其中B为降维后样本的内积矩阵，$b_{ij}=z_{i}^{T}z_{j}$.
+	
+	数学模型：任意两个样本在$d^{'}$空间的欧式距离等于原始空间中的距离。
+	\begin{equation}
+	\begin{split}
+		dist_{ij}&=\left \| z_{i} \right \|^2 + \left \| z_{j} \right \|^2-2z_{i}^Tz_{j}\\
+		&=b_{ii}+b_{jj}-2b_{ij}
+	\end{split}
+	\label{1}
+	\end{equation}
+	公式\ref{1}为数学模式，如何对数学模型求解释关键性问题，学数学的就牛逼在这里。求解$b_{ij}$也就是求矩阵B，已知$dist_{ij}$，未知$b_{ii},b_{jj}$，接下来就是使用数学手段将未知变量变已知变量。
+	
+	令降维后的样本Z被中心化，即$\sum_{i=1}^{m} z_{i}=0$,中心化公式$x_{i}^{'}=x_{i}-\frac{1}{m}\sum_{i=1}^{m}x_{i}$，显然$\sum_{i=1}^{m}b_{ij}=\sum_{i=1}^{m}z_{i}^{T}z_{j}=0$,$\sum_{j=1}^{m}b_{ij}=0$.
+	
+	\begin{eqnarray}
+	\sum_{i=1}^{m}dist_{ij}^{2}=\sum_{i=1}^{m}\left \| z_{i} \right \|^2+mb_{jj}\\
+	\sum_{j=1}^{m}dist_{ij}^{2}=\sum_{j=1}^{m}\left \| z_{j} \right \|^2+mb_{ii}
+	\end{eqnarray}
+	到了这一步可以将$b_{ii}$和$b_{jj}$消去了，但是$z_{i}$和$z_{j}$还没有解决：
+	\begin{equation}
+	\sum_{i=1}^{m}\sum_{j=1}^{m}dist_{ij}^{2}=m\sum_{i=1}^{m}\left \| z_{i} \right \|^2+m\sum_{j=1}^{m}\left \| z_{j} \right \|^2
+	\end{equation}
+	公式2和3乘以$\frac{1}{m}$、公式4乘以$\frac{1}{m^2}$，将其代入公式1中得：
+	\begin{equation}
+	b_{ij}=-\frac{1}{2}\left ( dist_{ij}^2-\frac{1}{m}\sum_{i=1}^{m}dist_{ij}^2-\frac{1}{m}\sum_{j=1}^{m}dist_{ij}^2+ \frac{1}{m^2}\sum_{i=1}^{m}\sum_{j=1}^{m}dist_{ij}^2\right )
+	\end{equation}
+	
+	厉害厉害，根据公式5就可以求出矩阵B了，之后对B进行特征值分解，假设特征举证中有$d^*$个非零特征值，他们构成对角举矩阵$\Lambda _{*}$,则Z可表达为：
+	\begin{equation}
+	Z=\Lambda _{*}^{\frac{1}{2}}V_{*}^{T}
+	\end{equation}
+	
+	\begin{lstlisting}
+	import numpy as np
+	from sklearn import metrics,datasets,manifold
+	from scipy import optimize
+	from matplotlib import pyplot
+	import pandas
+	import collections
+	
+	def calculate_distance_matrix(x,y):
+		d = metrics.pairwise_distances(x,y)
+		return d
+	
+	def calculate_B(D):
+		(n1,n2)=D.shape
+		DD=np.square(D)
+		Di=np.sum(DD,axis=1)/n1
+		Dj=np.sum(DD,axis=0)/n1
+		Dij=np.sum(DD)/(n1**2)
+		B=np.zeros((n1,n1))
+		for i in range(n1):
+			for j in range(n2):
+				B[i,j]=(Dij+DD[i,j]-Di[i]-Dj[j])/(-2)
+		return B
+	
+	def MDS(data,k):
+		D = calculate_distance_matrix(data,data)
+		print(D)
+		B=calculate_B(D)
+		Be,Bv = np.linalg.eigh(B)
+		Be_sort = np.argsort(Be)
+		Be = Be[Be_sort]
+		Bv=Bv[:,Be_sort]
+		Bez = np.diag(Be[0:k])
+		Bvz=Bv[:,0:k]
+		Z=np.dot(np.sqrt(Bez),Bvz.T).T
+		print(Z)
+		if __name__ == '__main__':
+			data = numpy.mat([[3,2,4],[2,0,2],[4,2,4]])
+			Z=MDS(data,2)
+	\end{lstlisting}
+	\begin{algorithm}[!h]
+		\caption{MDS算法}
+		\KwIn{距离矩阵D}
+		\KwOut{矩阵$Z=\Lambda _{*}^{\frac{1}{2}}V_{*}^{T}$}
+		计算公式2、3、4
+		
+		根据公式5计算矩阵B
+		
+		对矩阵B做特征值分解
+		
+		取$d^{'}$个最大特征值所构成的对角矩阵
+	\end{algorithm}
+	\section{PCA}
+	\subsection{储备知识}
+	
+	主成分学习是最常用的一种降维方法：
+	\begin{enumerate}
+		\item 一个矩阵和该矩阵的非特征向量相乘是对该向量的旋转变换。
+		\item 一个矩阵和该矩阵的特征向量相乘是对该向量的伸缩变换。
+	\end{enumerate}
+	\subsection{数学推导}
+			PCA的目标是让投影后的散度最大，设投影的超平面为V，样本$x_{i}$投影后的坐标为$V^{T}\cdot X_{i}$,投影后的方差为：
+	\begin{equation}
+	S^{2}=\frac{1}{m}\sum_{i=1}^{m}\left ( V^{T}X_{i}-E\left ( V^{T}X \right ) \right )^2
+	\end{equation}
+	对变化后的坐标做中心化处理，使其期望值为零则：
+	\begin{equation}
+	\begin{split}
+	S^{2}&=\frac{1}{m}\sum_{i=1}^{m}\left ( V^{T}X_{i} \right )^2\\
+	&=\frac{1}{m}\sum_{i=1}^{m}V^{T}X_{i}X_{i}^{T}V
+	\end{split}
+	\end{equation}
+	$X_{i}X_{i}^{T}$为原始空间样本协方差，使用C表示，数学模型为：
+	\begin{eqnarray*}
+	argmaxV^{T}CV\\
+	s.t.\left | V \right |=1
+	\end{eqnarray*}
+	采用拉格朗日乘子法进行求解：
+	\begin{equation}
+	f(V,\alpha )=V^{T}CV-\alpha \left ( VV^{T}-1 \right )
+	\end{equation}
+	对其求导并令其等于0：
+	\begin{eqnarray}
+	\frac{\delta  f}{\delta V}=2CV-2\alpha V\\
+	CV=\alpha V
+	\end{eqnarray}
+	将公式11带入公式9种得：
+	\begin{equation}
+	f(V,\alpha )=\alpha 
+	\end{equation}
+	由公式12可知散度的值只由$\alpha$来决定，$\alpha$的值越大，散度越大，也就是说我们需要找到最大的特征值与对应的特征向量。
+	
+	\begin{algorithm}
+		\caption{PCA算法}
+		\LinesNumbered
+		\KwIn{样本集D}
+		\KwOut{投影矩阵W}
+		对样本进行中心化
+		
+		计算样本的协方差矩阵
+		
+		对协方差矩阵进行特征值求解
+		
+		取最大的d个特征值所对应的特征向量$w_{1},w_{2},\ldots,w_{d}$
+	\end{algorithm}
+
+	\begin{lstlisting}
+	def PCA(data,k):
+		meanVals=np.mean(data,axis=0)
+		D = data-meanVals
+		B = np.cov(D,rowvar=False)
+		Be,Bv = np.linalg.eigh(B)
+		Be_sort = np.argsort(Be)
+		Bv=Bv[:,Be_sort]
+		Bev = Bv[:,0:k]
+		print(Bev)
+	if __name__ == '__main__':
+		data = numpy.mat([[3,2,4],[2,0,2],[4,2,4]])
+		Z=PCA(data,2)
+	\end{lstlisting}
+\end{document}

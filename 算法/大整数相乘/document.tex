@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{listings}
+\lstset{tabsize=3,language=C++,numbers=left,numbersep=2pt}
+\usepackage[top=1cm]{geometry}
+\title{大整数相乘}
+\author{W.J.Z}
+\date{2019.4.11}
+\begin{document}
+	\maketitle
+	\section{Question}
+	有两个用字符串表示的非常大的大整数,算出他们的乘积，也是用字符串表示。不能用系统自带的大整数类型。
+	\section{method}
+	\subsection{模拟乘法累加}
+	将每一位相乘，相加的结果保存到同一个位置，到最后才计算进位.
+	\begin{lstlisting}
+	int main()
+	{
+		string str1,str2;
+		cin >> str1>>str2;
+		int result[MAX]={0};
+		int num1[MAX]={0};
+		int num2[MAX]={0};
+		int size_num1 = str1.size();
+		int size_num2 = str2.size();
+		//注意是按照从右向左
+		for(int i=0,j=size_num1-1;i<size_num1;i++,j--)
+			num1[j]=str1[i]-'0';
+		for(int i=0,j=size_num2-1;i<size_num2;i++,j--)
+			num2[j]=str2[i]-'0';
+		//相乘不进位
+		for(int i=0;i<size_num1;i++)
+			for(int j=0;j<size_num2;j++)
+				result[i+j]=result[i+j]+num1[i]*num2[j];
+		string str="";
+		//进位
+		for(int i=0;i<(size_num1+size_num2-1);i++)
+		{
+			result[i+1] = result[i+1]+result[i]/10;
+			str+=to_string(result[i]%10);
+		}
+		//判断最后一位
+		if(result[size_num1+size_num2-1]!=0)
+			str+=to_string(result[size_num1+size_num2-1]);
+		//逆序输出
+		for(int i=str.size()-1;i>=0;i--)
+		cout<<str[i];
+	
+		return 0;
+	}
+
+	\end{lstlisting}
+		
+\end{document}

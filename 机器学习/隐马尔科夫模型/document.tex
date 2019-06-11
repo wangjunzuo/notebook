@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+\usepackage{enumerate}
+\usepackage[top=1.5cm]{geometry}
+\title{隐马尔可夫模型}
+\author{W.J.Z}
+\date{}
+
+\begin{document}
+	\maketitle
+	\section{隐马尔可夫模型}
+	隐马尔可夫模型是关于时序的概率模型，描述由一个隐藏的马尔可夫链随机生成不可观测的状态随机序列，再由各个状态生成一个观测而产生观测随机序列的过程。隐藏的马尔可夫链随机生成的状态的序列成为状态序列；每一个状态生成一个观测由此产生的观测的随机序列称为观测序列，序列的每一个位置可以看成一个时刻。
+	
+	马尔可夫模型由初始状态概率向量$\pi$、状态转移概率矩阵A和观测概率矩阵B决定。$\pi$和A决定状态序列，B决定观测序列，因此隐马尔可夫模型$\lambda $可以用三元符号表示$$\lambda =\left ( A,B,\pi \right )$$
+	
+	隐马尔可夫模型做了两个基本假设：(1)、在任意时刻t的状态只依赖于其前一时刻的状态，与其他时刻的状态及观测无关。(2)、任意时刻的观测只依赖该时刻的马尔可夫链的状态，与其他观测和状态无关。
+	
+	隐马尔可夫模型由3个基本问题：
+	\begin{enumerate}
+		\item 概率计算问题：给定模型$\lambda =\left ( A,B,\pi \right )$和观测序列$O=\left ( o_{1},o_{2},\ldots,o_{T} \right )$，计算在模型下$\lambda $观测序列O出现的概率$P(O|\lambda )$.
+		\item 学习问题:已知模型$\lambda =\left ( A,B,\pi \right )$和观测序列$O=\left ( o_{1},o_{2},\ldots,o_{T} \right )$，使得在该模型下观测序列概率$P(O|\lambda )$最大，即用极大似然估计的方法估计参数。
+		\item 预测问题：已知模型$\lambda =\left ( A,B,\pi \right )$和观测序列$O=\left ( o_{1},o_{2},\ldots,o_{T} \right )$，求对给定观测序列条件概率$P(I|O)$最大的状态序列$I=\left ( i_{1},i_{2},\ldots,\i_{t} \right )$。即给定观测序列，求最有可能的对应的状态序列。
+	\end{enumerate}
+ 
+ \section{概率计算算法}
+ \subsection{前向算法}
+ 前向算法实际基于"状态序列的路径结构"递推计算$P(O|\lambda )$的算法，关键在于局部计算前向概率，然后利用路径结构将前向概率递推到全局。
+ \begin{algorithm}
+ 	\caption{观测序列概率的前向算法}
+ 	\LinesNumbered
+ 	\KwIn{隐马尔可夫模型$\lambda $,观测序列O}
+ 	\KwOut{观测序列概率P(O|$\lambda$ )}
+ 	初值$\alpha _{1}\left ( i \right )=\pi_{i}b_{i}\left ( o_{1} \right ),i=1,2,\ldots,N$
+ 	
+ 	递推 对t=1,2,\ldots,T-1
+ 	$$\alpha _{t+1}\left ( i \right )=\left [ \sum_{j=1}^{N}\alpha _{t}\left ( j \right )a_{ji} \right ]b_{i}\left ( o_{t+1} \right ),i=1,2,\ldots,N$$
+ 	
+ 	终止 $P(O|\lambda )=\sum_{i=1}^{N}\alpha _{T}\left ( i \right )$
+ \end{algorithm}
+	\subsection{后向算法}
+	\begin{algorithm}[h]
+		\caption{观测序列概率的后向算法}
+		\LinesNumbered
+		\KwIn{隐马尔可夫模型$\lambda $,观测序列O}
+		\KwOut{观测序列概率$P(O|\lambda )$}
+		$$\beta _{T}\left ( i \right )=1,i=1,2,\ldots,N$$
+		
+		对$t=T-1,T-2,\ldots,1$
+		$$\beta _{t}\left ( i \right )\sum_{j=1}^{N}a_{ij}b_{j}\left ( o_{t+1} \right )\beta _{t+1}\left ( j \right ),i=1,2,\ldots,N$$
+		
+		$$P\left ( O|\lambda  \right )=\sum_{i=1}^{N}\pi_{i}b_{i}\left ( o_{1} \right )\beta _{1}\left ( i \right )$$
+	\end{algorithm}
+
+	\section{学习算法}
+	\subsection{监督学习}
+	\noindent 转移概率$a_{ij}$的估计：
+	
+	设样本中时刻$t$处于状态$i$时刻$t+1$转移到状态$j$的频数为$A_{ij}$，name状态转移概率$a_{ij}$的估计为$$a_{ij}=\frac{A_{ij}}{\sum_{j=1}^{N}A_{ij}}$$
+	
+	\noindent 观测概率$b_{j}(K)的估计$：
+	
+	
+	设样本中状态为$j$并观测为$K$的频数是$B_{jk}$,那么状态为$j$观测为$K$的概率$b_{j}(k)$的估计是
+	$$b_{j}\left ( k \right )=\frac{B_{jk}}{\sum_{k=1}^{M}B_{jk}}$$
+	
+	初始状态概率$\pi_{i}$的估计为S个样本中初始状态为$q_{i}$的频数。
+	
+	\subsection{无监督学习}
+	概率模型为$$P\left ( O|\lambda  \right )=\sum _{I}P\left ( O|I,\lambda  \right )P\left ( I,\lambda  \right )$$ 数据$O$为观测数据，隐数据$I$为状态序列数据,它的参数学习由EM算法实现。
+	
+	\begin{algorithm}[h]
+		\caption{Baum-Welch算法}
+		\LinesNumbered
+		\KwIn{观测数据O}
+		\KwOut{隐马尔可夫模型参数}
+		初始化：对$n=0$，选取$a_{ij}^{(0)}$,$b_{j}(K)^(0)$,$\pi_{i}^{0}$，得到模型$\lambda ^{(0)}=\left ( A^{0},B^{(0)},\pi^{(0)} \right )$
+		
+		递推：对$n=1,2,\ldots,$ $$a_{ij}^{（n+1)}=\frac{\sum_{t=1}^{T-1}P\left ( O,i_{t}=i,i_{t+1}=j|\lambda  \right )}{2}$$
+		$$b_{j}\left ( k \right )=\frac{\sum_{t=1}^{T}P\left ( O,i_{t}=j|\lambda  \right )I\left ( o_{t}=v_{k} \right )}{\sum_{t=1}^{T}P\left ( O,i_{t}=j|\lambda  \right )}$$
+		$$\pi_{i}=\frac{P\left ( O，i_{1}=i|\lambda  \right )}{P\left ( O|\lambda  \right )}$$
+		
+		终止，得到模型参数$$\lambda ^{\left ( n+1 \right )}=\left ( A^{(n+1)},B^{(n+1)},\pi^{\left ( n+1 \right )} \right )$$
+		
+	\end{algorithm}
+		\section{预测算法}
+		维特比算法使用动态规划解隐马尔可夫模型问题，相等于求概率最大路径。
+		\begin{algorithm}[h]
+			\caption{维特比算法}
+			\LinesNumbered
+			\KwIn{模型$\lambda =\left ( A,B,\pi \right )$和观测$O$}
+			\KwOut{最优路径$I^{*}=\left ( i_{1}^{*},\ldots,i_{T}^{*} \right )$}
+			初始化$$\delta _{t}\left ( i \right )=\pi_{i}b_{i}\left ( o_{1} \right ),i=1.2.\ldots,N$$
+			$$\psi _{1}\left ( i \right )=0,i=1,2,\ldots,N$$
+			
+			递推：对$t=2,3,\ldots,T$
+			$$\delta _{t}\left ( i \right )=\mathop{max}_{1\leq j\leq N}\left [ \delta _{t-1}\left ( j \right ) a_{ji}\right ]b_{i}\left ( o_{t} \right )，i=1,2,\ldots,N$$
+			
+			$$\psi _{t}\left ( i \right )=\arg \mathop{max}_{1\leq j\leq N}\left [ \delta _{t-1}\left ( j \right ) a_{ji}\right ],i=1,2,\ldots,N$$
+			
+			终止$$P^{*}=\mathop{max}_{1\leq i\leq N}\delta _{T}\left ( i \right )$$  $$i_{T}^{*}=\arg \mathop{max}_{i\leq i\leq N}\left [ \delta _{T}\left ( i \right ) \right ]$$
+			
+			最优路径回溯：对$t=T-1,T-2,\ldots,1$
+			$$i_{t}^{*}=\psi _{t+1}\left ( i_{t+1}^{*} \right )$$求得最优路径$I^{*}=\left ( i^{*}_{1},i^{*}_{2},\ldots,i_{T}^{*} \right )$
+			
+		\end{algorithm}
+\end{document}

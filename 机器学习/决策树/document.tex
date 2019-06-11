@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+\title{决策树}
+\author{W.J.Z}
+\date{}
+\begin{document}
+	\maketitle
+	\textbf{摘要：}决策树学习通常包括特征选择、决策树生成和决策树剪枝，其内部节点表示一个特征或属性，叶子节点表示一个类，学习损失函数通常为正则化的极大似然公式，决策树生成只考虑局部最优，剪枝则考虑全局最优。
+	\section{ID3 and C4.5}
+	在信息论与概率统计中，熵是表示随机变量不确定性的度量。
+	\begin{equation}
+	P\left ( p \right )=-\sum_{i=1}^{n}p_{i}\log p_{i}
+	\end{equation}
+	定义$0\log0 = 0$,对数以2为底或以e为底。信息增益公式为：
+	\begin{equation}
+	g\left ( D,A \right ) =H\left ( D \right ) -H\left ( D|A \right )
+	\end{equation}
+	数据集$D$的经验熵为$H(D)$为：
+	\begin{equation}
+	H\left ( D \right ) = -\sum_{k=1}^{K}\frac{\left | C_{k} \right |}{D}\log _{2}\frac{\left | C_{k} \right |}{D}
+	\end{equation}
+	特征$A$对数据集$D$的经验条件熵为：
+	\begin{equation}
+	H\left ( D|A \right )=\sum_{i=1}^{n}\frac{\left | D_{i} \right |}{\left | D \right |}H\left ( D_{i} \right )=-\sum_{i=1}^{n}\frac{\left | D_{i} \right |}{\left | D \right |}\sum_{k=1}^{K}\frac{\left | D_{ik} \right |}{\left | D_{i} \right |}\log _{2}\frac{\left | D_{ik} \right |}{\left | D_{i} \right |}	
+	\end{equation}
+	信息增益为：
+	\begin{equation}
+	g(D,A)=H(D)-H(D|A)
+	\end{equation}
+	数据集$D$关于特征A的值的熵比为：
+	\begin{equation}
+	g\left ( D,A \right )=\frac{g\left ( D,A \right )}{H_{A}D}
+	\end{equation}
+	其中$H_{A}\left ( D \right )=-\sum_{i=1}^{n}\frac{\left | D_{i} \right |}{\left | D \right |} \log _{2}\frac{\left | D_{i} \right |}{\left | D \right |}$，$n$为特征A取值的个数。
+	\\
+	
+	\begin{algorithm}[H]
+		\caption{ID3算法}
+		\LinesNumbered
+		\KwIn{训练数据集D，特征集A，阈值$\varepsilon $}
+		\KwOut{决策树T}
+		从根节点开始，对节点计算所有可能的特征的信息增益，选择信息增益最大的特征作为节点的特征，由该特征的不同取值建立子节点；再对子节点递归的调用以上方法，构建决策树；直到所有特征的信息增益均很小或者没有特征可以选择为止。
+	\end{algorithm}
+	\vspace{5pt}
+	C4.5决策树剪枝通过极小化决策树整体的损失函数或代价函数来实现。设树$T$的叶子节点个数为$|T|$,$t$是树$T$的叶节点，该叶节点有$N_{t}$个样本点，其中k类的样本点有$N_{tk}$个，$H_{t}(T)$为叶节点t上的经验熵。
+	\begin{equation}
+	C_{\alpha }=\sum_{t=1}^{\left | T \right |}N_{t}H_{t}\left ( T \right )+\alpha \left | T \right |
+	\end{equation}
+	其中经验熵为：
+	\begin{equation}
+	H_{t}\left ( T \right )=-\sum_{k}\frac{N_{tk}}{N_{t}}\log \frac{N_{tk}}{N_{t}}
+	\end{equation}
+	$C(T)$表示模型对训练数据的预测误差，$|T|$表示模型负责度，$\alpha \geq 0$控制两者之间的影响，较大的$\alpha$促使选择较简单的模型，较小的$\alpha$促使选择教复杂的模型。
+	
+	\section{CART算法}
+	CART决策树同样由特征选择、树的生成及剪枝组成，既可以用于分类也可以用于回归。CART假设决策树是二叉树，内部节点特征的取值为'是'和'否',做左分支是取值为'是'的分支，右节点是取值为'否'的分支。
+	\subsection{回归}
+	一个回归树对应着将输入空间的一个划分以及在划分后的单元上的输出值。假设已将输入空间划分为M个单元$R_{1},R_{2},\ldots R_{M}$,并且在每个单元$R_{m}$上有一个固定的输出值$c_{m}$，于是回归树模型可表示为：
+	\begin{equation}
+	f\left ( x \right ) = \sum_{m=1}^{M}C_{m}I\left ( x\epsilon R_{m} \right )
+	\end{equation}
+	对空间进行划分，选择第$j$个变量$x^{j}$和它的取值$s$，作为切分变量和切分点并定义两个区域：
+	\begin{equation}
+	R_{1}\left ( j,s \right )=\left \{ x|x^{j}\leq s \right \} \text{和} R_{2}\left ( j,s \right )= \left \{ x|x^{j}> s \right \}
+	\end{equation}
+	寻找最佳切分变量$j$和最佳切分点$s$：
+	\begin{equation}
+	\mathop{min}_{j,s}\left [ \mathop{min}_{c1}\sum_{x_{i}\epsilon R_{1}(j,s)}\left ( y_{i}-c_{1} \right )+\mathop{c_{2}\sum_{x_{i}\epsilon R_{2}\left ( j,s \right )}\left ( y_{i}-c_{2} \right )^{2}} \right ]
+	\end{equation}
+	最优切分点为：
+	\begin{equation}
+	ave\left ( y_{i}|x_{i}\epsilon R_{1}\left ( j,s \right ) \right ) \text{和} \quad ave\left ( y_{i}|x_{i}\epsilon R_{2}\left ( j,s \right ) \right )
+	\end{equation}
+	\subsection{分类}
+	概率分布基尼指数定义为：
+	\begin{equation}
+	Gini(p)=\sum_{k=1}^{K}p_{k}(1-p_{k})
+	\end{equation}
+	d对应二分类问题，概率分布基尼指数为：
+	\begin{equation}
+	Gini(p)=2p(1-p)
+	\end{equation}
+	对于给定的样本集合D，基尼指数为：
+	\begin{equation}
+	Gini(D)=1-\sum_{k=1}^{K}\left ( \frac{\left | C_{k} \right |}{\left | D \right |} \right )^{2}
+	\end{equation}\
+	在特征A的条件下，集合D的基尼指数定义为：
+	\begin{equation}
+	Gini(D,A)=\frac{\left | D_{1} \right |}{D}Gini\left ( D_{1} \right )+\frac{\left | D_{2} \right |}{D}Gini\left ( D_{2} \right )
+	\end{equation}
+\end{document}

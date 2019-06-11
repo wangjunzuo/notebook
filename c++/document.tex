@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{listings}
+\usepackage{enumerate}
+\lstset{language=C,xleftmargin=-3em,tabsize=4}
+\title{c++总结}
+\author{W.J.Z}
+\date{}
+\begin{document}
+\maketitle
+\section{变量和基本类型}
+	\noindent 1、基本内置类型：
+	
+	C++基本数据类型为算术类型(布尔、字符、整型、浮点型)和空类型。\\
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		类型 & 最小尺寸 \\
+		\hline
+		bool & 未知 \\
+		char & 8位 \\
+		wchar\_t & 16位 \\
+		char16\_t & 16位\\
+		char32\_t & 32位 \\
+		int & 16位 \\
+		long & 16位 \\
+		long long & 32位\\
+		float & 6位有效数字\\
+		double & 10位有效数字 \\
+		long double & 10位有效数字\\
+		\hline
+	\end{tabular}	
+
+	\begin{enumerate}[技巧1:]
+		\item 执行浮点数运算选double
+		\item 数值不为负时选unsigned
+		\item 整型运算选择int和long long
+	\end{enumerate}
+		
+	\noindent 2、变量声明与定义
+	
+	变量初始化时创建变量并赋予一个初始值，赋值为擦除变量当前值赋予一个新值，推荐初始化使用$int \quad sum(0);$方式。
+	
+	为了配合c++分离式编译，使变量为整个程序所知，使用extern关键字对变量进行声明。变量只能被定义一次，但可以被多次声明。
+	\\
+	
+	\noindent 3、引用和指针的区别
+	
+	引用为引用对象创建了一个别名，指针则是创建了对象。指针无需在创建时进行赋初值，引用必须制定引用对象。指针可以在整个生命周期指向不同的对象，而应用有且只有一个。
+	\begin{lstlisting}
+	int *p = &a; %复合类型写法一
+	int* p = &a; %复合类型写法二
+	const int a =10; %a值不能改变
+	int *const p = &b;%不能改变p的值
+	%*放在const前面说明指针是一个常量
+	const int* p = &a;%a值不能改变
+	const int* cont p = &a;%a和p值都不能改变
+	\end{lstlisting}
+	
+	\noindent 4、头文件
+	
+	$\#define$定义预处理变量，$ifdef 和 ifndef$检查预处理变量是否定义，如果检查为真，执行后续操作直到遇见$\#endif$。
+	
+	\section{面向对象的基本特性}
+	\begin{enumerate}
+		\item 类和对象的申明\\
+		\item 构造函数
+		\item 析构函数
+		\item 内联成员函数
+		\item 复制构造函数
+		\item 类的组合	
+		\item 结构体
+		\item 联合体
+		\item 枚举类	
+	\end{enumerate}
+	\section{数据共享与保护}
+	\begin{enumerate}
+		\item 静态数据成员
+		\item 静态函数成员
+		\item 友元函数和友元类
+		\item 常对象、常成员、常引用
+		\item 多文件结构
+		\item 预编译命令
+	\end{enumerate}
+	\section{继承和派生}
+	\begin{enumerate}
+		\item 单继承、多继承、继承方式
+		\item 基类与派生类转换	
+	\end{enumerate}
+	\section{面向对象编程}
+	对于某些函数，基类希望它的派生类各自定义适合自身的版本，此时基类就将这些函数声明成虚函数，派生类必须在其内部对其所有重新定义的虚函数进行声明，任何构造函数之外的非静态函数函数都可以是虚函数，如果基类把一个函数声明为虚函数，则该函数在派生类中隐式地也是虚函数，派生类对象不能直接初始化从基类继承而来的成员(每个类控制自己成员的初始化过程)，首先初始化基类的部分，然后按照声明的顺序依次初始化派生类的成员。
+	
+	如果基类定义了一个静态成员，则在整个继承体系中只存在该成员的唯一定义。C++11新标准中可以使用override关键字来说明派生类中的虚函数，将共同基类摄这位虚基类，这时从不同的路径继承过来的同名数据成员在内存中就有一个副本，同一个函数名也只有一个映射。
+	
+\end{document}

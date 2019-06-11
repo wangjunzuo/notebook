@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage[top=1cm]{geometry}
+\usepackage{listings}
+\lstset{tabsize=5,language=C++}
+\usepackage[ruled]{algorithm2e}
+
+\title{二维平面直线上最多的点个数}
+\author{W.J.Z}
+\date{2019.4.10}
+
+\begin{document}
+	\maketitle
+	\section{问题描述}
+	Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
+	\begin{lstlisting}
+	* Definition for a point.
+	* struct Point {
+	*     int x;
+	*     int y;
+	*     Point() : x(0), y(0) {}
+	*     Point(int a, int b) : x(a), y(b) {}
+	* }; 
+	\end{lstlisting}
+	\section{问题分析}
+	\subsection{问题解的所有情况}
+	\noindent 第i个点与其他点有以下三种情况：
+	\begin{enumerate}
+		\item 重合：判断条件 $point[i].x==point[j].x$ \&\& $point[i].y==point[j].y$ 
+		\item 无斜率(垂直)： 判断条件  $point[i].x==point[j].x$
+		\item 有斜率：判断条件 $k=y/x$
+	\end{enumerate}
+	\section{编程思路}
+	针对重合情况，令变量cp记录与第i个点重合的点数;针对无斜率情况，令vp变量记录与第i个点垂直的点数；针对有斜率情况，由于斜率有很多，所有使用map<double,int>代表当斜率为k时的点数。
+	\begin{lstlisting}
+	int maxPoints(vector<Point> &points) {
+		int size = points.size();
+		if(size<=2 )
+			return size;
+		int vp,cp,cmax,res=0;
+	
+		for(int i=0;i<size;i++)
+		{
+			vp=0;cp=0;cmax = 0;
+			map<double,int> grad;
+			for(int j=i+1;j<size;j++)
+			{
+				double x = points[i].x - points[j].x;
+				double y = points[i].y - points[j].y;
+				if(x==0 && y==0)  //重合点
+					cp++;
+				else if(x==0)    //竖直方向
+					vp++;
+				else               //斜率
+				{
+					double k = y/x;
+					if(grad.find(k)==grad.end())
+						grad.insert(pair<double,int>(k,1));
+					else
+						grad[k]++;
+				}
+			}
+			map<double,int>::iterator it = grad.begin();
+			cmax = it->second;
+			while(it!=grad.end())
+			{
+				cmax = max(cmax,it->second);
+				it++;
+			}
+			res = max(max(cmax,vp)+cp+1,res);	
+		}
+		return res;
+	}
+	\end{lstlisting}
+\end{document}

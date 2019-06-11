@@ -1,0 +1,122 @@
+\documentclass[twocolumn]{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage[ruled]{algorithm2e}
+\title{感知机}
+\author{W.J.Z}
+\date{}
+\begin{document}
+	\maketitle
+	\textbf{摘要：}感知机基于误分类损失函数，利用梯度下降法极小化损失函数，求得将特征空间进行线性划分的超平面，具有原始形式和对偶形式，是神经网络与支持向量机的基础。
+	
+	\section{感知机}
+	感知机公式:
+	\begin{equation}
+	f(x)=sign(w\cdot x + b)
+	\label{ganzhiji}
+	\end{equation}
+	$w$为权重向量，$x$为特征向量，$b$为偏置。sign函数为公式\ref{sign}：
+	\begin{equation}
+	sign(x)\left\{\begin{matrix}
+	+1, & x \geq 0 \\ 
+	-1,& x < 0
+	\end{matrix}\right.
+	\label{sign}
+	\end{equation}
+	从公式\ref{ganzhiji}可以看出，感知机所做的工作就是求得一超平面，即获取$w$和$b$的值，将所有实例划分为两类，位于超平面上方的为正类，位于超平面下方的为负类。
+	
+	\section{学习策略}
+	给定一个数据集:
+	$$T=\left \{ \left ( x_{1},y_{1} \right )\cdot \cdot \cdot \left ( x_{n},y_{n} \right ) \right \}$$
+	空间上任意一点$x_{i}$到超平面的距离公式\ref{distance}所示：
+	\begin{equation}
+	\frac{1}{\left \| w \right \|}\left ( w\cdot x_{i}+b \right )
+	\label{distance}
+	\end{equation}
+	$\left \| w \right \|$为$w$的$L_{2}$范数(就是点到平局的距离公式)。
+	
+	对于误分类实例$\left ( x_{i},y_{i} \right )$，则公式\ref{new}成立,该点到超平面的距离为公式\ref{newdi}：
+	\begin{equation}
+	-y_{i}\left ( w\cdot x+b \right )> 0 
+	\label{new}
+	\end{equation}
+	\begin{equation}
+		-\frac{1}{\left \| w \right \|}y_{i}\left ( w\cdot x_{i}+b \right )
+		\label{newdi}
+	\end{equation}
+	
+	对于所有的误分类点集合M，则M到超平面的总距离为公式\ref{total}：
+	\begin{equation}
+	-\frac{1}{\left \| w \right \|}\sum_{x_{i}\epsilon M}y_{i}(w\cdot x_{i}+b)
+	\label{total}
+	\end{equation}
+	不考虑$\frac{1}{\left \| w \right \|}$，则得到感知机的损失函数公式\ref{sunshi}。
+	\begin{equation}
+	L(w,b)=-\sum_{x_{i}\epsilon M}y_{i}(w\cdot x_{i}+b)
+	\label{sunshi}
+	\end{equation}
+	损失函数在正确分类时为0，给定训练数据集，损失函数$L(w,b)$是$w，b$的连续可导函数。
+	
+	损失函数的梯度由公式\ref{e}和公式\ref{y}所示：
+	\begin{equation}
+	\bigtriangledown _{w}L(w,b)= -\sum_{x_{i}\epsilon M}y_{i}x_{i}
+	\label{e}
+	\end{equation}
+	\begin{equation}
+	\bigtriangledown _{b}L(w,b)= -\sum_{x_{i}\epsilon M}y_{i}
+	\label{y}
+	\end{equation}
+	\textbf{$w,b$更新策略：}
+	$$w\leftarrow w+\eta y_{i}x_{i}$$
+	$$b\leftarrow b+\eta y_{i}$$
+	$\eta \left ( 0< \eta \leq 1 \right )$成为学习率。
+	
+	\subsection{感知机原始形式算法}
+	\begin{algorithm}
+		\caption{感知机原始形式学习算法}
+		\LinesNumbered
+		\KwIn{训练数据集$T$，学习率$\eta$}
+		\KwOut{$w,b$,$	f(x)=sign(w\cdot x + b)$}
+		
+		初始化$w_{0},b_{0}$ \\
+		在训练集中选取$(x_{i},y_{i})$\\
+		如果$y_{i}(w \cdot x_{i}+b)\leq 0$ 
+		$$w\leftarrow w+\eta y_{i}x_{i}$$
+		$$b\leftarrow b+\eta y_{i}$$\\
+		返回第2步，直到完全分类正确。
+	\end{algorithm}
+
+	\subsection{感知机对偶模式}
+	什么是对偶模式：将$w，b$表示为$(x_{i},y_{j})$的线性组合的形式，通过求解系数来达到求解$w,b$的目的，如公式\ref{1}和公式\ref{2}所示。
+	\begin{equation}
+		w=\sum_{i=1}^{N}\alpha _{i}y_{i}x_{i}
+		\label{1}
+	\end{equation}
+	\begin{equation}
+	b=\sum_{i=1}^{N}\alpha _{i}y_{i}
+	\label{2}
+	\end{equation}
+	
+	$\alpha _{i} \geq 0$.从结果输出来看，原始模式和对偶模式一个输出$w,b$，一个输出$\alpha，b$，二者差别在于求$w$的方法不同,不同的初始值和不同选取误分类点的次序都会造成最后的解不尽相同。
+	\\
+	\\
+	\\
+	\\
+	
+	\subsection{感知机对偶形式算法}
+		\begin{algorithm}
+		\caption{感知机对对偶形式学习算法}
+		\LinesNumbered
+		\KwIn{训练数据集$T$，学习率$\eta$}
+		\KwOut{$\alpha ,b$,\\$f(x)=sign(\sum_{j=1}^{N}\alpha _{j}y_{j}x_{j}\cdot x + b)$}
+		
+		$\alpha \leftarrow 0,b\leftarrow 0$ \\
+		在训练集中选取$(x_{i},y_{i})$\\
+		如果$y_{i}(\sum_{j=1}^{N}\alpha _{j}y_{j}x_{j}\cdot x + b)\leq 0$ 
+		$$\alpha _{i}\leftarrow \alpha _{i}+\eta $$
+		$$b\leftarrow b+\eta y_{i}$$\\
+		返回第2步，直到完全分类正确。
+	\end{algorithm}
+	\subsection{算法收敛性}
+	感知机算法收敛性证明请查看李航的统计学习算法。水平有限，总结如有错误之处请谅解。
+\end{document}

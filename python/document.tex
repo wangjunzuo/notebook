@@ -1,0 +1,536 @@
+\documentclass[twocolumn]{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{ graphics}
+\usepackage{listings}
+\usepackage{multicol}
+\graphicspath{{picture/}}
+\title{python知识点总结}
+\author{W.J.Z}
+\date{}
+\lstset{xleftmargin=-3em,language=python}
+\begin{document}
+	\maketitle
+
+	
+	\section{基础知识}
+	\subsection{python必备知识}
+	\begin{enumerate}
+		\item 12个数学操作符： +、 -、 *、 /、 \%、 \///、 **、 +=、 -=、 *=、 /=、 \%=。 
+		
+		\item 2个基本函数：print()、input()。
+		
+		\item 12个逻辑符号:True、False、==、！=、<、>、<=、>=、and、or、not。
+	\end{enumerate}
+
+	\subsection{控制语句}
+	if 控制语句：
+
+	\begin{lstlisting}
+	age = 10
+	if age < 10:
+		print('low')
+	elif age > 10:
+		print('high')
+	else:
+		print('right')
+	\end{lstlisting}
+	
+	while控制语句：
+	\begin{lstlisting}
+	age = 1
+	while age < 5:
+		age = age +1
+	print(age)
+	\end{lstlisting}
+	
+	for 控制语句
+	\begin{lstlisting}
+	for i in range(1,10,2):
+		print(i)
+	\end{lstlisting}
+	
+	\subsection{函数定义}
+	\begin{lstlisting}
+	def function(num)
+	while num < 5:
+		print(num)
+		num = num + 1
+	return num
+	new = function(1)
+	print(new)
+	\end{lstlisting}
+	
+	\subsection{数据结构}
+	\subsubsection{列表}
+	列表常用方法：
+	\begin{lstlisting}
+	parm = [1,2,3,4]
+	parm[3]  #查看指定下标的数据  
+	parm[-1]   #倒着数列表   
+	parm[1:3]  #对数据进行切片
+	len(parm)#len()函数求列表的长度
+	parm * 2      #重复2遍列表
+	parm + [5,6]  #列表连接  
+	del parm[3]#删除指定坐标的数据
+	parm.index(2) #获取数据2所在的下标
+	parm.append(4)#末尾添加数据4
+	parm.insert(2,2)#在下标2插入数据2
+	parm.remove(2)#删除第一个2
+	parm.sort(reverse=True)#逆序排列列表
+	\end{lstlisting}
+	\subsection{元组}
+	元组数据内容不能被修改、添加、删除，其他函数方法与列表相同。将数据转换为列表和元组使用list()和tuple()函数。
+	\begin{lstlisting}
+	list((1,2,3,4))
+	tuple([1,2,3,4])
+	\end{lstlisting}
+	\subsection{字典}
+	\begin{lstlisting}
+	parm = {'name':'xiaoli','age':'12'}
+	parm.keys()  #键
+	parm.values() #值
+	parm.items()  #所有数据
+	#返回name对应的值.没有返回0
+	parm.get('name',0)
+	#设置默认sex
+	parm.setdefault('sex','female')
+	\end{lstlisting}
+	\subsection{字符串}
+	
+	\begin{tabular}{|c|p{0.3\textwidth}|}
+		\hline
+		方法 & 说明 \\
+		\hline
+		upper() & 所有字母变为大写 \\
+		\hline
+		lower() & 所有字母变为小写 \\
+		\hline
+		isupper() & 字符串是否为大写 \\
+		\hline
+		islower() & 字符串是否为小写 \\
+		\hline
+	\end{tabular}
+	\\
+	\\
+	upper()和lower()函数会创建新的副本，而不是直接修改的原有数据,如果需要更改使用pparm = parm.lower()方式。
+	\\
+	
+	\begin{tabular}{|c|p{0.3\textwidth}|}
+		\hline
+		方法 & 说明 \\
+		\hline
+		isalpha() & 字符串只包含字母，非空 \\
+		\hline
+		isalnum() & 只包含字母和数字，非空 \\
+		\hline
+	    isdecimal() & 只包含数字字符，非空 \\
+		\hline
+		isspace() & 只包含空格、制表符、换行，非空\\
+		\hline
+		istitle() & 大写字母开头，后面都是小写字母 \\
+		\hline
+		startswith() & 字符串开头的单词判断\\
+		\hline
+		endswith()  & 字符串结尾单词判断 \\
+		\hline
+		join() & 连接字符串列表\\
+		\hline
+		split() & 切割字符串 \\
+		\hline
+		rjust() &参数一指定从右对齐长度，参数二指定填充字符 \\
+		\hline
+		ljust() &参数一指定从左对齐长度，参数二指定填充字符 \\
+		\hline
+		cjust() &参数一指定从左右对齐长度，参数二指定填充字符 \\
+		\hline
+		strip() & 删除字符左右的空白字符 \\
+		\hline
+		rstrip() & 删除字符右的空白字符 \\
+		\hline
+		lstrip() & 删除字符左的空白字符 \\
+		\hline
+	\end{tabular}
+	\section{正则表达式}
+	\subsection{正则表达式速记技巧}
+	$. \quad [\quad] \quad \wedge \quad \$ $是所有语言都支持的正则表达式，正则难理解因为其有一个等价概念，将等价恢复于原始写法就简单的多。
+
+	\noindent 1、等价
+
+	？,*,+,$\setminus$d,$\setminus$w都是等价字符。	
+
+	？等价于匹配长度\{0,1\} 
+	
+	*等价于匹配长度\{0,\}
+	
+	+等价于匹配长度\{1,\}
+	
+	$\setminus$d等价于$[0-9]$
+	
+	$\setminus$D等价于$[^\land0-9]$
+	
+	$\setminus$w等价于$[A-Za-z0-9]$
+	
+	$\setminus$W等价于$[^\land A-Za-z0-9]$
+	\\
+	
+	\noindent 2、常用运算符与表达式
+	
+	$^\land$开始
+	
+	()域段
+	
+	[\quad]包含
+	
+	[$^\land$\quad]不包含
+	
+	\{m,n\}匹配长度
+	
+	$.$ 任何单个字符
+	
+	$|$ 或
+	
+	$\setminus$转义
+	
+	$\$$结尾
+	
+	[A-Z] 26个大写字母
+	
+	[a-z] 26个小写字母
+	
+	[0-9] 0到9数字
+	
+	[A-Za-z0-9] 
+	
+	,分割
+	
+	[0,3]包含0或3数字
+	
+	\noindent 3、语法与释义
+	
+	基础语法$ "^\land([]\{\})([]\{\})\$"$
+	
+	技巧：?,*,+,$\setminus$d,$\setminus$w 这些都是简写的,完全可以用[]和\{\}代替
+	
+	\subsection{python正则表达式}
+	\begin{enumerate}
+		\item 用import re导入正则表达式模块
+		\item 用re.complie()函数创建一个Regex对象
+		\item 向Regex对象的search()方法传入向查找的字符串
+		\item 调用Match对象的group()方法返回实际匹配的字符串
+	\end{enumerate}
+%	\lstset{xleftmargin=-3.5em}
+	\begin{lstlisting}
+	括号分组
+	regex=re.compile(r'(\d{3})-(\d{3}-\d{4})')
+	mo=regex.search('my num 415-555-4344')
+	mo.group() #415-555-4344
+	mo.group(1)#415
+	mo.group(2)#555-4344
+	
+	匹配多个分组,和c语言的或作用一样
+	regex = re.compile(r'b |a')
+	mo = regex.search('b')
+	mo.group() #b
+	mo = regex.search('a')
+	mo.group() #a
+	
+	贪心与非贪心
+	regex = re.compile(r'(ha){3,5}')
+	mo=regex.search('hahahahaha')
+	mo.group() #hahahahaha
+	regex = re.compile(r'(ha){3,5}?')
+	mo = regex.search('hahahahaha')
+	mo.group() #hahaha
+	
+	findall()方法
+	search()方法返回一个Match对象，包含
+	被查找字符串中的第一次匹配的文本，而
+	findall()方法将返回一组字符串。
+	
+	sub()替换字符串
+	sub(arg1,arg2);参数一为替换字符串
+	参数二为匹配内容
+	
+	\end{lstlisting}
+	
+	\section{读取文件}
+	\subsection{路径}
+	\begin{lstlisting}{language=python}
+	import os
+	#根据系统获取正确的路径
+	os.path.join('usr','bin')
+	#获取当前工作路径
+	os.path.getcwd()
+	#改变当前工作路径
+	os.path.chdir('c:\\')
+	#创建新文件夹
+	os.makedirs('c:\\newdir')
+	#获取绝对路径
+	os.path.abspath('.')
+	#是否为绝对路径
+	os.path.isabs(path)
+	#返回从start到path的相对路径
+	os.path.relpath(path,start)
+	#获取路径名
+	os.path.dirname(path)
+	#获取文件名
+	os.path.basename(path)
+	#获取文件大小
+	os.path.getsize(path)
+	#获取文件夹下文件名列表
+	os.listdir(path)
+	#检查路径是否存在
+	os.path.exists(path)
+	#检查文件是否存在
+	os.path.isfile(path)
+	#检查是否为文件夹
+	os.path.isdir(path)
+	\end{lstlisting}
+	\subsection{读取文件}
+	\begin{lstlisting}
+	#打开文件,r读模式 w写模式 a追加模式
+	file = open(path，'r')
+	#读取文件
+	content = file.read();
+	content1 = file.readlines();
+	#写文件
+	file  = open(path,'w')
+	file.write(text+'\n')
+	file.close()
+	\end{lstlisting}
+	
+	\section{组织文件}
+	\subsection{文件和文件夹操作}
+	\begin{lstlisting}
+	import shutile,os
+	#将spam.txt文件复制到dev文件夹下
+	#并重命名pam.txt
+	shutil.copy('c:\\spam.txt','c:\\dev\\pam.txt')
+	#复制整个文件夹
+	shutil.copytree('c:\\bacon','c:\\backup')
+	#将pam文件移动到eggs文件夹重命名spam.txt
+	shutil.move('c:\\pam.txt','c:\\eggs\\spam.txt')
+	#删除文件夹和文件
+	shutil.rmtree(path)
+	#使用send2trash安全删除
+	import send2trash
+	send2trash.send2trash(file)
+	#遍历目录树
+	os.walk();
+	#读取zip文件
+	improt zipfile,os
+	zip=zipfole.ZipFile(file)
+	#获取压缩包李文件名列表
+	zip.namelist()
+	#加压zip文件
+	zip.extractall()
+	#指定解压文件
+	zip.extract(file)
+	#创建zip文件
+	zip = zipfile.ZipFile(file,'w')
+	zip.write('filename',compress='')
+	zip.close()
+	\end{lstlisting}
+	
+	\section{调试}
+	\subsection{抛出异常}
+	\begin{lstlisting}
+	def demo(num):
+	if num != 1:
+ 		raise Exception("num")
+		
+	for i in range(0,3,1):
+	try:
+		demo(i)
+	except Exception as err:
+		print(str(err))
+	\end{lstlisting}
+	
+	\subsection{日志模块}
+	
+	\begin{lstlisting}{language=c}
+	import logging
+	logging.basicConfig(filename='log.txt',
+	level=logging,DEBUG,format=
+	'%(asctime)s-%(levelname)s-%(message)s')
+	logging.disable(logging.DEBUG)
+	\end{lstlisting}
+	
+	\noindent python的日志级别
+	
+	\begin{tabular}{|c|c|c|}
+		\hline
+		级别 &日志函数 &描述 \\
+		\hline
+		DEBUG &loggging.debug() &最低级别 \\
+		\hline
+		INFO & logging.info() &记录程序中一般时间\\
+		\hline
+		WARNING &logging.warning() & 表示可能的问题\\
+		\hline
+		ERROR & logging.error() & 记录错误 \\
+		\hline
+		CRITICAL & logging.critical() & 表示致命错误\\
+		\hline 
+	\end{tabular}
+	\section{web爬虫}
+	\subsection{webbrowser}
+	\begin{lstlisting}
+	import requests
+	res = requests.get('http://www.baidu.com/1/txt')
+	#检查下载是否成功
+	res.raise_for_status()
+	#将下载内容写入文件
+	file = open('2.txt','wb')
+	for duff in res.iter_content(10000)
+		playfile.write(chunk)
+	file.close()
+	import requests,bs4
+	res = requests.get('www://d.com')
+	res.raise_for_status()
+	elem = bs4.BautifulSoup(res.text)
+	#使用select()方法寻找元素
+	elems = elem.select('span')
+	#获取元素的属性值
+	elems.get('id')
+	\end{lstlisting}
+	\onecolumn
+	\subsection{selemium}{}
+	selenium的WebDriver方法，用于寻找元素。
+	\begin{lstlisting}
+		#使用CSS类的name元素
+		browser.find_element_by_class_name(name)
+		browser.find_elements_by_class_name(name)
+		#匹配CSS selector元素
+		browser.find_element_by_css_selector(selector)
+		browser.find_elements_by_css_selector(selector)
+		#匹配id属性值得元素
+		browser.find_element_by_id(id)
+		browser.find_elements_by_id(id)
+		#完全匹配提供的text的<a>元素
+		browser.find_element_by_link_text(text)
+		browser.find_element_by_link_text(text)
+		#包含提供的text的<a>元素
+		browser.find_element_by_partial_link_text(text)
+		browser.find_elements_by_partial_link_text(text)
+		#匹配name属性值得元素
+		browser.find_element_by_name(name)
+		browser.find_elements_by_name(name)
+		#匹配标签name的元素
+		browser.find_element_by_tag_name(name)
+		browser.find_elements_by_tag_name(name)
+	\end{lstlisting}
+	\begin{lstlisting}
+		from selenium import webdriver
+		browser = webdriver.Firefox()
+		browser.get('www.baidu.com')
+		elem = browser.find_element_by_link_text('a')
+		elem.click()
+	\end{lstlisting}
+	\twocolumn
+	\section{处理execl文件}
+	\begin{lstlisting}
+	import openpyxl
+	wb=openpyl.load_workbook('ee.xlxs')
+	wb.get_sheet_names()
+	sheet=wb.get_sheet_by_name('sheet1')
+	sheet=wb.get_active_sheet()
+	sheet['A1']
+	sheet.cell(row=1,column=2)
+	sheet['A1':'C3']
+	sheet.columns[1]
+	sheet.rows[1]
+	wb.creat_sheet(index=2,title='a')
+	#sheet为worksheet对象，不是字符串
+	wb.remove_sheet(sheet)
+	\end{lstlisting}
+	\section{处理CSV和JSON文件}
+	\noindent 处理csv文件：
+	\begin{lstlisting}
+	import csv
+	file = open('file.csv')
+	reader = csv.reader(file)
+	data = list(reader)
+	newfile = open('out.csv','w',
+	newline='')
+	output = csv.writer(newfile)
+	output.writerow(data[1])
+	output.close()
+	\end{lstlisting}
+	处理JSON文件：
+	\begin{lstlisting}
+	improt json
+	data= json.loads(file.text)
+	\end{lstlisting}
+	\section{时间函数}
+	\begin{enumerate}
+		\item datetime对象包含一些整型值，保存在year、month、day、hour、minute、second等属性中。
+		\item timedelta对象表示一段时间
+		\item time.time() 返回当前时刻Unix纪元时间戳
+		\item time.sleep(seconds) 让程序暂停seconds参数指定的秒数
+		\item datetime.datetime(year,month,day,hour,minute,second)返回指定时刻的datetime对象
+		\item datetime.datetime.now() 函数返回当前时刻的datetime对象
+	\end{enumerate}
+	\begin{lstlisting}
+	import threading
+	#APP为自定义函数,args为传参
+	threading.Tread(target=APP，args=[])
+	\end{lstlisting}
+	\section{发送短信}
+	\begin{lstlisting}
+	from twilio.rest 
+	improt TwilioRestClient
+	accountSID='xxx'
+	authToken='xxxx'
+	twilioCli=TwilioRestClient(accountSID,
+	authToken)
+	myTwilioNumber='xxx'
+	myCellPhone='xxx'
+	message=twilioCli.messages.create(body=''
+	,from_=myTwilioNumber,to=myCellPhone) 
+	\end{lstlisting}
+	\section{用gui自动化控制键盘和鼠标}
+	\subsection{控制鼠标}
+	\begin{lstlisting}
+	import pyautogui
+	#执行动作之前都会等待一秒
+	pyautogui.PAUSE=1
+	#获取屏幕的大小
+	pyautogui.size()
+	#移动鼠标
+	pyautogui.moveTo(x,y,duration=0.25)
+	#获取当前坐标信息
+	pyautogui.position()
+	#点击鼠标
+	pyautogui.click(x,y)
+	#拖动鼠标
+	pyautogui.dragTo(x,y,duration=1)
+	#从当前坐标拖动鼠标
+	pyautogui.dragRel(x,y,duration=1)
+	#滚动鼠标，200个单位
+	pyautogui.scroll(200)
+	#获取屏幕快照
+	im=pyautogui.screenshot()
+	#匹配坐标
+	pyautogui.pixelMatchesColor(50,200,(r,n,g))
+	im.getpixel((200,200))
+	#图像识别,obj为目标图像
+	pyautogui.locateOnScreen('obj.png')
+	#查找所有匹配的目标
+	list(pyautogui.locateAllOnScreen('obj.png'))
+	#获取目标的坐标
+	pyautogui.center((1,2,2,3))
+	#点击
+	pyautogui.click((1,2))
+	\end{lstlisting}
+	\subsection{控制键盘}
+	\begin{lstlisting}
+	#发送字符串
+	pyautogui.typewrite('hello')
+	#按键
+	pyautogui.press('1')
+	#热键组合
+	pyautogui.hotkey('ctrl','c')
+	\end{lstlisting}
+\end{document}

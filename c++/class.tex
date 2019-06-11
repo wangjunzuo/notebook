@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{listings}
+\title{C++面向对象编程}
+\author{W.J.Z}
+\date{}
+\begin{document}
+	\maketitle
+	\section{C++类}
+	\begin{lstlisting}[language=C++,tabsize=2]
+	calss Sales_data add{
+		friend Sales_data add(const Sales_data&,const Sales_data&);
+		public:
+			Sales_data() = dafault;
+			Sales_data()(const std::string &s,unsigned n,double p):
+						bookNo(s),units_solds_sold(n),revenue(p*n){}
+			Sales_data(const std::string&s):bookNo(s){}
+			Sales_data(std::istream&);
+			std::string isbn() const {return bookNo;}
+			Sales_data &combine(const Sales_data&);
+			
+		privete:
+			std::string bookNo;
+			unsigned unites_sold = 0;
+			double revenue = 0.0;
+	};
+	封装实现了类的接口和实现的分离，封装后的类隐藏了它的实现细节。
+	编译器处理类分为两步：首先编译成员的声明，然后才轮到成员函数体。
+	calss和struct定义类唯一区别就是默认访问权限不同。
+	成员函数通过一个名为this的额外的隐式参数来访问调用它的那个对象。
+	\end{lstlisting}
+	\section{拷贝控制}
+	\section{重载运算与类型转换}
+	\section{面向对象编程设计}
+	\section{模板与泛型编程}
+\end{document}
